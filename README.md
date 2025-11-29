@@ -1,61 +1,121 @@
-# Transportation Problem with Google ORTools
+# 🚚 Transportation Problem with Google OR-Tools  
+A Linear Programming Approach
 
+This repository implements and experiments with a **Transportation Problem** using **Google OR-Tools**.  
+The goal is to determine the optimal shipment plan from multiple warehouses to multiple retail stores, minimizing total transportation cost while satisfying all stock and demand constraints.
 
-## Supuestos
+## 📘 Problem Description
 
-Vamos a considerar:
+We consider a company with:
 
-- Indices
-    - $d$: Número de Deposito
-    - $l$: Número de Local
-    - $n$: Número de producto
+- **D** warehouses (depots), indexed by $d$
+- **L** retail stores (locals), indexed by $l$
+- **N** types of products, indexed by $n$
 
-- Constantes:
-    - $D$: Número total de Depósitos
-    - $L$: Número total de Locales
-    - $N$: Número total de Productos
+For each product, we know:
 
-- Limites:
-    - $S$: Stock de los Depósitos
-    - $T$: Demanda de los Locales  
+- The **available stock** at each warehouse  
+- The **demand** at each retail store  
+- The **unit transportation cost** for sending one unit of each product from each warehouse to each store  
 
+The objective is to compute the **optimal transportation plan**—that is, how many units of each product should be transported from each warehouse to each store—such that:
 
-***Variables:***
+- Total transportation cost is **minimized**
+- Warehouse stock limits are respected  
+- Store demand is fully satisfied  
 
-- $c^n_{dl}$  el costo de llevar el articulo n del Deposito _d_ al Local _l_ (números)
+This problem is related to the **Assignment Problem**, which has specific polynomial-time algorithms (e.g., the Hungarian Algorithm). However, Linear Programming is more flexible and accommodates multiple products, capacities, and more complex business constraints—hence its relevance here.
 
-- $x^n_{dl}$  cantidad del articulo de llevar el articulo n del Deposito _d_ al Local _l_ (Entero)
+## 🧮 Mathematical Model
 
+### **Indices**
 
-Vamos a minizar el costo de entrega:
+- $d$: Warehouse index  
+- $l$: Store index  
+- $n$: Product index  
 
-$$
-    \min{\bigg(\sum^N_{n=1}\sum^D_{d=1}\sum^L_{l=1} c^n_{dl} x^n_{dl}}\bigg)
-$$
+### **Constants**
 
-***Restricciones:***
+- $D$: Total number of warehouses  
+- $L$: Total number of stores  
+- $N$: Total number of products  
+- $S_d^n$: Stock of product $n$ at warehouse $d$
+- $T_l^n$: Demand of product $n$ at store $l$
 
-1. Las unidades enviadas tienen que ser positivas
+### **Variables**
 
-$$
-  x^n_{dl}\geq 0\, \forall l \, \forall d \, \forall n
-$$
+- $c_{dl}^n$: Cost of shipping one unit of product $n$ from warehouse $d$ to store $l$
+- $x_{dl}^n$: Number of units of product $n$ shipped from warehouse $d$ to store $l$
+- Integer and non-negative
 
-2. Se puede enviar como máximo el stock del depósito
+## 🎯 Objective Function
 
-$$
-  \sum^L_{l=1}x^n_{dl}\leq S_d\, \forall d \, \forall n
-$$
-
-
-3. Se puede enviar como máximo la demanda de cada local
-
-$$
-  \sum^D_{d=1}x^n_{dl}\leq T_l\, \forall l \, \forall n
-$$
-
-4. Se debe enviar la demanda de cada local _l_
+Minimize total transportation costs:
 
 $$
-  \sum^D_{d=1}x^n_{dl}\geq T_l\, \forall l \, \forall n
+  \min \left(
+  \sum_{n=1}^{N} \sum_{d=1}^{D} \sum_{l=1}^{L} c_{dl}^n \, x_{dl}^n
+  \right)
 $$
+
+## 📏 Constraints
+
+### **1. Non-negativity**
+
+$$
+x_{dl}^n \ge 0 \quad \forall d,l,n
+$$
+
+### **2. Warehouse supply limit**
+
+$$
+\sum_{l=1}^{L} x_{dl}^n \le S_d^n \quad \forall d,n
+$$
+
+### **3. Store demand cannot be exceeded**
+
+$$
+\sum_{d=1}^{D} x_{dl}^n \le T_l^n \quad \forall l,n
+$$
+
+### **4. Store demand must be satisfied**
+
+$$
+\sum_{d=1}^{D} x_{dl}^n \ge T_l^n \quad \forall l,n
+$$
+
+## 🛠️ Implementation (Python + OR-Tools)
+
+The model is implemented using the **Google OR-Tools Linear Solver**.
+
+Example structure:
+
+```sh
+/project-root
+ ├── input_data/
+ ├── output_data/
+ ├── src/
+ │    ├── utils.py
+ │    └── transportation_problem_solver.py
+ ├── experimentation.py
+ └── README.md
+```
+
+> You can run experiments varying the number of warehouses, stores, and products to evaluate performance.
+
+## 📊 Experiments
+
+You are encouraged to:
+
+- Generate different problem instances
+- Vary the number of warehouses and stores
+- Measure execution time
+- Compare results with heuristic or assignment-based approaches  
+
+## 🤝 Contributing
+
+Pull requests are welcome! If you'd like to extend the model, experiment further, or optimize performance, feel free to contribute.
+
+## 📄 License
+
+This project is released under the MIT License.

@@ -1,0 +1,31 @@
+[project]
+name = "transportation-problem-ortools"
+version = "0.1.0"
+description = "The transportation problem is a type of linear programming problem that optimizes the movement of goods from multiple sources to multiple destinations, aiming to minimize total transportation costs. In this repo, a simple example is analyzed to showcase the different tools to use."
+authors = [
+    {name = "Nahuel Pelli",email = "nahuelpelli91@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "ortools (>=9.14.6206,<10.0.0)",
+    "pandas (>=2.3.3,<3.0.0)",
+    "tqdm (>=4.67.1,<5.0.0)",
+    "numpy (>=2.3.5,<3.0.0)"
+]
+
+[dependency-groups]
+dev = [
+    "isort (>=7.0.0,<8.0.0)",
+    "black (>=25.11.0,<26.0.0)",
+    "ipykernel (>=7.1.0,<8.0.0)",
+    "jupyter (>=1.1.1,<2.0.0)"
+]
+
+[tool.poetry]
+package-mode = false
+
+[tool.isort]
+profile="black"
+src_paths=["src"]
